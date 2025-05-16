@@ -1,7 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using HillarysHairCare.Models;
 
-public class CreekRiverDbContext : DbContext
+public class HillarysHairCareDbContext : DbContext
 {
 
     public DbSet<Stylist> Stylists { get; set; }
@@ -9,7 +9,7 @@ public class CreekRiverDbContext : DbContext
     public DbSet<Appointment> Appointments { get; set; }
     public DbSet<Service> Services { get; set; }
 
-    public CreekRiverDbContext(DbContextOptions<CreekRiverDbContext> context) : base(context)
+    public HillarysHairCareDbContext(DbContextOptions<HillarysHairCareDbContext> context) : base(context)
     {
 
     }
