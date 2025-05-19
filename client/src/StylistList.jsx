@@ -32,7 +32,6 @@ export default function StylistList() {
           <div key={s.id}>
             <div>{s.name}</div>
             <div>{matchedService ? matchedService.name : "Unknown Service"}</div>
-            <div>{s.serviceId}</div>
             <div>{s.active.toString()}</div>
           </div>
         );
