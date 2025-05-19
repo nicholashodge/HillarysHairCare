@@ -10,9 +10,10 @@ function App() {
       <>
         <Navbar color="light" expand="md">
           <Nav navbar>
-            <NavbarBrand href="/">🐕‍🦺 🐩 DeShawn's Dog </NavbarBrand>
+            <NavbarBrand href="/">Hillary's Haircare</NavbarBrand>
             <NavItem>
-              <NavLink href="/walkers">Walkers</NavLink>
+              <NavLink href="/addCustomer">Add Customer</NavLink>
+              <NavLink href="/stylistList">Stylist List</NavLink>
             </NavItem>
           </Nav>
         </Navbar>

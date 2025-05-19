@@ -55,6 +55,16 @@ app.MapGet("/stylists", (HillarysHairCareDbContext db) =>
     }).ToList();
 });
 
+app.MapGet("/customers", (HillarysHairCareDbContext db) =>
+{
+    return db.Customers.Select(c => new CustomerDTO
+    {
+        Id = c.Id,
+        Name = c.Name,
+       
+    }).ToList();
+});
+
 app.MapPost("/stylists", (HillarysHairCareDbContext db, Stylist stylist) =>
 {
     db.Stylists.Add(stylist);

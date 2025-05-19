@@ -72,13 +72,16 @@ export default function AppointmentList() {
             <div>Appointment Time: {a.appointmentTime}</div>
             <div>Customer: {customer ? customer.name : "Unknown Customer"}</div>
             <div>Stylist: {stylist ? stylist.name : "Unknown Stylist"}</div>
-            
+            <div> Total Cost: {a.totalCost}</div>
+
+
             {appointmentServiceItems.map(asi => {
               const matchedService = services.find(service => service.id === asi.serviceId);
               return (
                 <div key={asi.id}>
                   {matchedService ? matchedService.name : "Unknown Service"}
                 </div>
+               
               );
             })}
           </div>
