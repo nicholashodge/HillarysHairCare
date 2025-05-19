@@ -1,7 +1,7 @@
-import { getServices, getStylists } from "./StylistService";
+import { getServices } from "./StylistService.js";
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { getStylists } from "./StylistService";
+import { getStylists } from "./StylistService.js";
 
 export default function Home() {
   const [stylists, setStylists] = useState([])
@@ -30,6 +30,7 @@ export default function Home() {
 
 const matchedService = services.find(service => service.id === s.serviceId);
   return (
+    {stylists}.map(d => (
 <div> 
     <div key={s.id}>
     <div>{s.name}</div>
@@ -40,6 +41,6 @@ const matchedService = services.find(service => service.id === s.serviceId);
     </div>
   
 </div>
-  )
-  }
+    )))
+}
   

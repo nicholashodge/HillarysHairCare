@@ -10,8 +10,9 @@ function App() {
       <>
         <Navbar color="light" expand="md">
           <Nav navbar>
-            <NavbarBrand href="/">🐕‍🦺 🐩 DeShawn's Dog Walking</NavbarBrand>
+            <NavbarBrand href="/">🐕‍🦺 🐩 DeShawn's Dog </NavbarBrand>
             <NavItem>
+              <NavLink href="/walkers">Walkers</NavLink>
             </NavItem>
           </Nav>
         </Navbar>
