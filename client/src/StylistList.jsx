@@ -1,13 +1,9 @@
-import { getServices } from "./StylistService.js";
+import { getServices, getStylists } from "./StylistService";
 import { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
-import { getStylists } from "./StylistService.js";
 
-export default function Home() {
-  const [stylists, setStylists] = useState([])
-  const [services, setServices ] = useState([])
-
-
+export default function StylistList() {
+  const [stylists, setStylists] = useState([]);
+  const [services, setServices] = useState([]);
 
   useEffect(() => {
     getStylists()
@@ -17,7 +13,7 @@ export default function Home() {
       });
   }, []);
 
-    useEffect(() => {
+  useEffect(() => {
     getServices()
       .then(setServices)
       .catch(() => {
@@ -26,21 +22,21 @@ export default function Home() {
   }, []);
 
 
-
-
-const matchedService = services.find(service => service.id === s.serviceId);
   return (
-    {stylists}.map(d => (
-<div> 
-    <div key={s.id}>
-    <div>{s.name}</div>
-    <div>{matchedService.name}</div>    
-    <div> {s.serviceId} </div>
-    <div> {s.active} </div>
-    
+    <div>
+      {stylists.map((s) => {
+        const matchedService = services.find(
+          (service) => service.id === s.serviceId
+        );
+        return (
+          <div key={s.id}>
+            <div>{s.name}</div>
+            <div>{matchedService ? matchedService.name : "Unknown Service"}</div>
+            <div>{s.serviceId}</div>
+            <div>{s.active.toString()}</div>
+          </div>
+        );
+      })}
     </div>
-  
-</div>
-    )))
+  );
 }
-  

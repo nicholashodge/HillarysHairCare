@@ -3,8 +3,7 @@ import ReactDOM from "react-dom/client";
 import "./index.css";
 import App from "./App";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-
-import Home from "./StylistList";
+import StylistList from "./StylistList";
 
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
@@ -12,7 +11,7 @@ root.render(
   <BrowserRouter>
     <Routes>
       <Route path="/" element={<App />}>
-        <Route index element={<Home />} />
+        <Route index element={<StylistList />} />
       </Route>
     </Routes>
   </BrowserRouter>,

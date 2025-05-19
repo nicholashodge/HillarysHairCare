@@ -7,5 +7,6 @@ public class Stylist {
     [Required]
     public string Name { get; set; }
     public int ServiceId { get; set; }
+    public Service Service { get; set; }
     public bool Active { get; set; }
 }
