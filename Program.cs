@@ -3,12 +3,14 @@ using Microsoft.EntityFrameworkCore;
 using System.Text.Json.Serialization;
 using Microsoft.AspNetCore.Http.Json;
 using Npgsql;
+using HillarysHairCare.Models.DTOs;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
-builder.Services.AddOpenApi();
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen();
 
 // allows passing datetimes without time zone data 
 AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
@@ -16,38 +18,68 @@ AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
 // allows our api endpoints to access the database through Entity Framework Core
 builder.Services.AddNpgsql<HillarysHairCareDbContext>(builder.Configuration["HillarysHairCareDBConnectionString"]);
 
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("CorsPolicy", builder =>
+    {
+        builder
+            .WithOrigins("http://localhost:5000", "http://localhost:5001", "http://localhost:5173")
+            .AllowAnyMethod()
+            .AllowAnyHeader();
+    });
+});
+
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
-    app.MapOpenApi();
+    //app.MapOpenApi();
+    app.UseSwagger();
+    app.UseSwaggerUI();
 }
+
+app.UseCors("CorsPolicy");
 
 app.UseHttpsRedirection();
 
-var summaries = new[]
+//get all stylists
+app.MapGet("/stylists", (HillarysHairCareDbContext db) =>
 {
-    "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
-};
+    return db.Stylists.Select(s => new StylistDTO
+    {
+        Id = s.Id,
+        Name = s.Name,
+        ServiceId = s.ServiceId,
+        Active = s.Active
+    }).ToList();
+});
 
-app.MapGet("/weatherforecast", () =>
+//get stylist by Id
+app.MapGet("/stylists/{id}", (HillarysHairCareDbContext db, int id) =>
 {
-    var forecast =  Enumerable.Range(1, 5).Select(index =>
-        new WeatherForecast
-        (
-            DateOnly.FromDateTime(DateTime.Now.AddDays(index)),
-            Random.Shared.Next(-20, 55),
-            summaries[Random.Shared.Next(summaries.Length)]
-        ))
-        .ToArray();
-    return forecast;
-})
-.WithName("GetWeatherForecast");
+    return db.Stylists.Include(s => s.Service).Select(s => new StylistDTO
+    {
+        Id = s.Id,
+        Name = s.Name,
+        ServiceId = s.ServiceId,
+        Service = new ServiceDTO {
+            Id = s.Service.Id,
+            Name = s.Service.Name,
+            ServiceCost = s.Service.ServiceCost
+        }
+    }).Single(s => s.Id == id);
+});
+
+app.MapGet("/services", (HillarysHairCareDbContext db) =>
+{
+    return db.Services.Select(s => new ServiceDTO
+    {
+        Id = s.Id,
+        Name = s.Name,
+        ServiceCost = s.ServiceCost
+    }).ToList();
+});
 
 app.Run();
-
-record WeatherForecast(DateOnly Date, int TemperatureC, string? Summary)
-{
-    public int TemperatureF => 32 + (int)(TemperatureC / 0.5556);
-}
