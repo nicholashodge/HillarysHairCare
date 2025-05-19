@@ -29,7 +29,6 @@ builder.Services.AddCors(options =>
     });
 });
 
-
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -56,6 +55,13 @@ app.MapGet("/stylists", (HillarysHairCareDbContext db) =>
     }).ToList();
 });
 
+app.MapPost("/stylists", (HillarysHairCareDbContext db, Stylist stylist) =>
+{
+    db.Stylists.Add(stylist);
+    db.SaveChanges();
+    return Results.Created($"/stylists/{stylist.Id}", stylist);
+});
+
 //get stylist by Id
 app.MapGet("/stylists/{id}", (HillarysHairCareDbContext db, int id) =>
 {
@@ -80,6 +86,43 @@ app.MapGet("/services", (HillarysHairCareDbContext db) =>
         Name = s.Name,
         ServiceCost = s.ServiceCost
     }).ToList();
+});
+
+app.MapGet("/appointments", (HillarysHairCareDbContext db) =>
+{
+    return db.Appointments.Select(a => new AppointmentDTO
+    {
+        Id = a.Id,
+        AppointmentTime = a.AppointmentTime,
+        CustomerId =  a.CustomerId,
+        StylistId = a.StylistId,
+        TotalCost = a.TotalCost
+    }).ToList();
+});
+
+app.MapGet("/appointments/{id}", (HillarysHairCareDbContext db, int id) =>
+{
+    return db.Appointments.Include(a => a.Customer).Include(a => a.Stylist).Select(a => new AppointmentDTO
+    {
+        Id = a.Id,
+        AppointmentTime = a.AppointmentTime,
+        CustomerId = a.CustomerId,
+        Customer = new CustomerDTO {
+            Id = a.Customer.Id,
+            Name = a.Customer.Name
+        },
+        StylistId = a.StylistId,
+        Stylist = new StylistDTO {
+            Id = a.Stylist.Id,
+            Name = a.Stylist.Name,
+            ServiceId = a.Stylist.Service.Id,
+            Service = new ServiceDTO {
+                Id = a.Stylist.Service.Id,
+                Name = a.Stylist.Service.Name,
+                ServiceCost = a.Stylist.Service.ServiceCost
+            }
+        }
+    });
 });
 
 app.Run();
